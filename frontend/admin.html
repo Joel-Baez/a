@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel del Administrador - Sistema de Tickets</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1>Panel del Administrador</h1>
+            <div class="nav-right">
+                <span id="userName"></span>
+                <button id="logoutBtn" class="btn btn-secondary">Cerrar Sesión</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div id="message" class="message"></div>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tickets">Gestión de Tickets</button>
+            <button class="tab-btn" data-tab="users">Gestión de Usuarios</button>
+        </div>
+        
+        <!-- Tab: Gestión de Tickets -->
+        <section id="ticketsTab" class="tab-content active">
+            <div class="section-header">
+                <h2>Todos los Tickets</h2>
+                <div class="filters">
+                    <select id="filterEstado">
+                        <option value="">Todos los estados</option>
+                        <option value="abierto">Abierto</option>
+                        <option value="en_progreso">En Progreso</option>
+                        <option value="resuelto">Resuelto</option>
+                        <option value="cerrado">Cerrado</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="ticketsList" class="tickets-grid">
+                <!-- Los tickets se cargarán aquí -->
+            </div>
+        </section>
+        
+        <!-- Tab: Gestión de Usuarios -->
+        <section id="usersTab" class="tab-content">
+            <div class="section-header">
+                <h2>Gestión de Usuarios</h2>
+            </div>
+            
+            <table id="usersTable" class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los usuarios se cargarán aquí -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+    
+    <!-- Modal para ver detalles del ticket -->
+    <div id="ticketModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeTicketModal">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+    
+    <!-- Modal para editar usuario -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeUserModal">&times;</span>
+            <h2>Editar Usuario</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label for="editName">Nombre</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="editRole">Rol</label>
+                    <select id="editRole" required>
+                        <option value="gestor">Gestor</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="js/admin.js"></script>
+</body>
+</html>
