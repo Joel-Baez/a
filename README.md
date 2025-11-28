@@ -40,7 +40,8 @@ Todas las rutas requieren token válido:
 - `POST /tickets/{id}/comments`: agrega comentario; gestores solo en sus tickets, administradores en todos.
 
 ## Frontend
-El frontend consume directamente los microservicios usando `fetch`, maneja tokens en `localStorage/sessionStorage` y actualiza el DOM para los paneles de gestor y administrador.
+- Punto de entrada: `http://127.0.0.1/a/frontend/index.html` (redirige si ya hay sesión activa).
+- El frontend consume directamente los microservicios usando `fetch`, maneja tokens en `localStorage/sessionStorage` y actualiza el DOM para los paneles de gestor y administrador.
 
 ## Seguridad y roles
 - Autenticación por token almacenado en `auth_tokens`.
