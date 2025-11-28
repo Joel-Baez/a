@@ -10,6 +10,8 @@ Este repositorio contiene una implementación base del sistema de tickets solici
 
 Cada microservicio tiene su propio `composer.json` y depende de Slim 4 y Eloquent; deben ejecutarse de forma independiente y sin API Gateway.
 
+> Nota: las carpetas anteriores `microservicio-usuarios` y `microservicio-tickets` fueron eliminadas; todo el backend vive ahora en `backend/users` y `backend/tikets`.
+
 ## Configuración de backend
 1. Copia el archivo `.env` en cada microservicio (opcional) o exporta las variables `DB_HOST`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD`. Por defecto se usa `soporte_tickets` en `127.0.0.1` con usuario `root` sin contraseña.
 2. Dentro de cada microservicio ejecuta:
