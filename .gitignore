@@ -1,0 +1,5 @@
+/vendor/
+microservicio-usuarios/vendor/
+microservicio-tickets/vendor/
+.idea/
+.DS_Store
