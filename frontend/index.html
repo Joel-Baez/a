@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Tickets - Inicio</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1>Sistema de Tickets de Soporte</h1>
+            <div class="nav-right">
+                <a class="btn btn-secondary" href="login.html">Iniciar sesión</a>
+                <a class="btn btn-primary" href="register.html">Registrarse</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+        <div class="section" style="text-align: center;">
+            <h2>Bienvenido</h2>
+            <p style="margin: 0 auto; max-width: 640px; color: #475569;">
+                Gestiona tickets de soporte en dos paneles diferenciados para gestores y administradores.
+                Inicia sesión para continuar o crea una cuenta nueva si aún no tienes acceso.
+            </p>
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a class="btn btn-primary" href="login.html">Ir al login</a>
+                <a class="btn btn-secondary" href="register.html">Crear cuenta</a>
+            </div>
+        </div>
+
+        <div class="section" style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            <div class="card">
+                <h3>Gestores</h3>
+                <p>Crea tickets, revisa su estado y agrega comentarios de seguimiento.</p>
+            </div>
+            <div class="card">
+                <h3>Administradores</h3>
+                <p>Gestiona todos los tickets, cambia estados, asigna responsables y añade comentarios.</p>
+            </div>
+            <div class="card">
+                <h3>Seguridad básica</h3>
+                <p>Autenticación por token almacenado en el backend y verificación desde el frontend.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

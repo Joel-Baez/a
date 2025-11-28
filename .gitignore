@@ -1,0 +1,8 @@
+/vendor/
+backend/users/vendor/
+backend/tikets/vendor/
+# Old microservice folders were consolidated under backend/
+microservicio-usuarios/
+microservicio-tickets/
+.idea/
+.DS_Store
