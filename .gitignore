@@ -1,5 +1,5 @@
 /vendor/
-microservicio-usuarios/vendor/
-microservicio-tickets/vendor/
+backend/users/vendor/
+backend/tikets/vendor/
 .idea/
 .DS_Store

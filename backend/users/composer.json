@@ -1,5 +1,5 @@
 {
-    "name": "soporte/microservicio-usuarios",
+    "name": "soporte/users",
     "description": "Microservicio de gestión de usuarios para el sistema de tickets",
     "require": {
         "php": ">=8.1",

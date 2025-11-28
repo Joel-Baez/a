@@ -3,8 +3,8 @@
 Este repositorio contiene una implementación base del sistema de tickets solicitado, separando la lógica en dos microservicios independientes (usuarios y tickets) y un frontend en HTML/CSS/JS.
 
 ## Estructura
-- `microservicio-usuarios`: autenticación, gestión de usuarios y validación de tokens.
-- `microservicio-tickets`: creación y administración de tickets y comentarios.
+- `backend/users`: autenticación, gestión de usuarios y validación de tokens.
+- `backend/tikets`: creación y administración de tickets y comentarios.
 - `frontend`: vistas en HTML5/JS/CSS sin frameworks.
 - `database/schema.sql`: script SQL para crear la base de datos relacional `soporte_tickets` con todas las tablas requeridas.
 
@@ -15,13 +15,13 @@ Cada microservicio tiene su propio `composer.json` y depende de Slim 4 y Eloquen
 2. Dentro de cada microservicio ejecuta:
    ```bash
    composer install
-   php -S localhost:8001 -t public   # usuarios
-   php -S localhost:8002 -t public   # tickets
+   php -S localhost:8001 -t public   # backend/users
+   php -S localhost:8002 -t public   # backend/tikets
    ```
 3. Importa `database/schema.sql` en tu servidor MySQL/MariaDB para crear las tablas.
 
 ## Endpoints principales
-### Microservicio de usuarios (`/microservicio-usuarios`)
+### Microservicio de usuarios (`/backend/users`)
 - `POST /register`: registro de usuarios (rol por defecto `gestor`).
 - `POST /login`: inicia sesión y genera token persistido en `auth_tokens`.
 - `POST /logout`: cierra sesión y elimina el token.
@@ -30,7 +30,7 @@ Cada microservicio tiene su propio `composer.json` y depende de Slim 4 y Eloquen
 - `PUT /users/{id}`: actualización de datos, rol y estado `is_active` (solo admin).
 - `DELETE /users/{id}`: eliminación de usuarios (solo admin).
 
-### Microservicio de tickets (`/microservicio-tickets`)
+### Microservicio de tickets (`/backend/tikets`)
 Todas las rutas requieren token válido:
 - `POST /tickets`: crea un ticket (gestor o admin).
 - `GET /tickets`: lista tickets; los gestores ven solo los propios, los administradores pueden filtrar por estado, creador o asignación.

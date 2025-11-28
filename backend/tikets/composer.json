@@ -1,5 +1,5 @@
 {
-    "name": "soporte/microservicio-tickets",
+    "name": "soporte/tikets",
     "description": "Microservicio de gestión de tickets para el sistema de soporte",
     "require": {
         "php": ">=8.1",
