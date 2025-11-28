@@ -14,12 +14,25 @@ Cada microservicio tiene su propio `composer.json` y depende de Slim 4 y Eloquen
 
 ## Configuración de backend
 1. Copia el archivo `.env` en cada microservicio (opcional) o exporta las variables `DB_HOST`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD`. Por defecto se usa `soporte_tickets` en `127.0.0.1` con usuario `root` sin contraseña.
-2. Dentro de cada microservicio ejecuta:
-   ```bash
-   composer install
-   php -S localhost:8003 -t public   # backend/users
-   php -S localhost:8002 -t public   # backend/tikets
-   ```
+2. Instala dependencias y levanta cada servicio. Puedes hacerlo de dos formas:
+   - Desde la raíz del repo (sin necesidad de moverte de carpeta):
+     ```bash
+     composer install -d backend/users
+     composer install -d backend/tikets
+     php -S 127.0.0.1:8001 -t backend/users/public backend/users/public/index.php
+     php -S 127.0.0.1:8002 -t backend/tikets/public backend/tikets/public/index.php
+     ```
+   - O, si prefieres, entrando en cada microservicio (entonces `-t public` sí apunta a la carpeta correcta):
+     ```bash
+     cd backend/users
+     composer install
+     php -S 127.0.0.1:8001 -t public public/index.php
+     
+     cd ../tikets
+     composer install
+     php -S 127.0.0.1:8002 -t public public/index.php
+     ```
+   De esta manera evitas el error "no existe la carpeta public" al ejecutar el servidor embebido de PHP.
 3. Importa `database/schema.sql` en tu servidor MySQL/MariaDB para crear las tablas según el esquema solicitado (users, auth_tokens, tickets y ticket_actividad) con datos de prueba y contraseñas hash.
 
 ## Endpoints principales
