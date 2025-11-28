@@ -58,6 +58,7 @@ Todas las rutas requieren token válido:
 ## Frontend
 - Punto de entrada: `http://127.0.0.1/a/frontend/index.html` (redirige si ya hay sesión activa).
 - El frontend consume directamente los microservicios usando `fetch`, maneja tokens en `localStorage/sessionStorage` y actualiza el DOM para los paneles de gestor y administrador.
+- Las llamadas JavaScript esperan que el microservicio de usuarios esté corriendo en `127.0.0.1:8001` y el de tickets en `127.0.0.1:8002`; si los servicios no están arriba verás el mensaje "Error al conectar con el servidor" en el login.
 
 ## Seguridad y roles
 - Autenticación por token almacenado en `auth_tokens`.
