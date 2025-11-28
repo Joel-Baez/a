@@ -1,42 +1,33 @@
 <?php
 
+use Dotenv\Dotenv;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use App\Controllers\UserController;
+use App\Controllers\TicketController;
 use App\Middleware\AuthMiddleware;
 
-require __DIR__ . '/../vendor/autoload.php';
+autoload();
 
-// Configuración de Eloquent
-$capsule = new Capsule;
+$dotenv = Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->safeLoad();
 
-$capsule->addConnection([
-    'driver'    => 'mysql',
-    'host'      => '127.0.0.1',
-    'database'  => 'practicaparcial',
-    'username'  => 'root',
-    'password'  => '',
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix'    => '',
-]);
-
+$database = require dirname(__DIR__) . '/config/database.php';
+$capsule = new Capsule();
+$capsule->addConnection($database);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-// Crear aplicación Slim
 $app = AppFactory::create();
+$app->addBodyParsingMiddleware();
 
 $app->get('/', function (Request $request, Response $response) {
-    $response->getBody()->write('Microservicio de usuarios activo');
+    $response->getBody()->write('Microservicio de tickets activo');
     return $response;
 });
 
-// Configuración de CORS
 $app->options('/{routes:.+}', fn($req, $res) => $res);
-
 $app->add(function (Request $request, $handler) {
     $origin = $request->getHeaderLine('Origin') ?: '*';
     $response = $handler->handle($request);
@@ -53,20 +44,20 @@ $app->add(function (Request $request, $handler) {
     return $response;
 });
 
-// Middleware de errores
 $app->addErrorMiddleware(true, true, true);
 
-// Rutas públicas (sin autenticación)
-$app->post('/register', [UserController::class, 'register']);
-$app->post('/login', [UserController::class, 'login']);
-
-// Rutas protegidas (con middleware de autenticación)
 $app->group('', function ($group) {
-    $group->post('/logout', [UserController::class, 'logout']);
-    $group->get('/validate', [UserController::class, 'validateToken']);
-    $group->get('/users', [UserController::class, 'listUsers']);
-    $group->put('/users/{id}', [UserController::class, 'updateUser']);
-    $group->delete('/users/{id}', [UserController::class, 'deleteUser']);
+    $group->post('/tickets', [TicketController::class, 'create']);
+    $group->get('/tickets', [TicketController::class, 'list']);
+    $group->get('/tickets/{id}', [TicketController::class, 'detail']);
+    $group->put('/tickets/{id}/status', [TicketController::class, 'updateStatus']);
+    $group->put('/tickets/{id}/assign', [TicketController::class, 'assign']);
+    $group->post('/tickets/{id}/comments', [TicketController::class, 'comment']);
 })->add(new AuthMiddleware());
 
 $app->run();
+
+function autoload(): void
+{
+    require_once __DIR__ . '/../vendor/autoload.php';
+}

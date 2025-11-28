@@ -26,8 +26,13 @@ function checkSession() {
     }
 }
 
-// Ejecutar al cargar la página de login o register
-if (window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html')) {
+// Ejecutar al cargar la página de login, registro o la landing index
+if (
+    window.location.pathname.includes('login.html') ||
+    window.location.pathname.includes('register.html') ||
+    window.location.pathname.endsWith('/frontend/') ||
+    window.location.pathname.includes('index.html')
+) {
     checkSession();
 }
 
