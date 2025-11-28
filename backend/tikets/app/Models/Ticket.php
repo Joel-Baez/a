@@ -9,31 +9,31 @@ class Ticket extends Model
     protected $table = 'tickets';
 
     protected $fillable = [
-        'title',
-        'description',
-        'status',
-        'creator_id',
-        'assigned_admin_id',
+        'titulo',
+        'descripcion',
+        'estado',
+        'gestor_id',
+        'admin_id',
     ];
 
     protected $attributes = [
-        'status' => 'abierto',
+        'estado' => 'abierto',
     ];
 
     public $timestamps = true;
 
-    public function creator()
+    public function gestor()
     {
-        return $this->belongsTo(User::class, 'creator_id');
+        return $this->belongsTo(User::class, 'gestor_id');
     }
 
-    public function assignedAdmin()
+    public function admin()
     {
-        return $this->belongsTo(User::class, 'assigned_admin_id');
+        return $this->belongsTo(User::class, 'admin_id');
     }
 
-    public function comments()
+    public function actividades()
     {
-        return $this->hasMany(TicketComment::class)->orderBy('created_at', 'asc');
+        return $this->hasMany(TicketActividad::class, 'ticket_id')->orderBy('created_at', 'asc');
     }
 }

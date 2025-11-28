@@ -17,12 +17,13 @@ Cada microservicio tiene su propio `composer.json` y depende de Slim 4 y Eloquen
 2. Dentro de cada microservicio ejecuta:
    ```bash
    composer install
-   php -S localhost:8001 -t public   # backend/users
+   php -S localhost:8003 -t public   # backend/users
    php -S localhost:8002 -t public   # backend/tikets
    ```
-3. Importa `database/schema.sql` en tu servidor MySQL/MariaDB para crear las tablas.
+3. Importa `database/schema.sql` en tu servidor MySQL/MariaDB para crear las tablas según el esquema solicitado (users, auth_tokens, tickets y ticket_actividad) con datos de prueba y contraseñas hash.
 
 ## Endpoints principales
+El esquema usa las tablas y campos solicitados: `users` (roles `gestor`/`admin` con columna `is_active` para desactivar cuentas), `auth_tokens`, `tickets` (campos `titulo`, `descripcion`, `estado` con valores `abierto|en_progreso|resuelto|cerrado`, `gestor_id`, `admin_id`) y `ticket_actividad` para el historial de mensajes por ticket.
 ### Microservicio de usuarios (`/backend/users`)
 - `POST /register`: registro de usuarios (rol por defecto `gestor`).
 - `POST /login`: inicia sesión y genera token persistido en `auth_tokens`.

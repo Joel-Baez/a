@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TicketComment extends Model
+class TicketActividad extends Model
 {
-    protected $table = 'ticket_comments';
+    protected $table = 'ticket_actividad';
 
     protected $fillable = [
         'ticket_id',
         'user_id',
-        'comment',
+        'mensaje',
     ];
 
     public $timestamps = true;

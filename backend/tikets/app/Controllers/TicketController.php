@@ -3,14 +3,14 @@
 namespace App\Controllers;
 
 use App\Models\Ticket;
-use App\Models\TicketComment;
+use App\Models\TicketActividad;
 use App\Models\User;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class TicketController
 {
-    private const STATUS = ['abierto', 'en_progreso', 'cerrado'];
+    private const ESTADOS = ['abierto', 'en_progreso', 'resuelto', 'cerrado'];
 
     public function create(Request $request, Response $response): Response
     {
@@ -21,16 +21,18 @@ class TicketController
             return $this->json($response, ['success' => false, 'message' => 'Acceso denegado'], 403);
         }
 
-        if (empty($data['title']) || empty($data['description'])) {
+        if (empty($data['titulo']) || empty($data['descripcion'])) {
             return $this->json($response, ['success' => false, 'message' => 'Título y descripción son obligatorios'], 400);
         }
 
         $ticket = Ticket::create([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'creator_id' => $user->id,
-            'assigned_admin_id' => $data['assigned_admin_id'] ?? null,
+            'titulo' => $data['titulo'],
+            'descripcion' => $data['descripcion'],
+            'gestor_id' => $user->id,
+            'admin_id' => $data['admin_id'] ?? null,
         ]);
+
+        $ticket->load(['gestor', 'admin']);
 
         return $this->json($response, [
             'success' => true,
@@ -42,20 +44,20 @@ class TicketController
     public function list(Request $request, Response $response): Response
     {
         $user = $request->getAttribute('user');
-        $query = Ticket::with(['creator', 'assignedAdmin']);
+        $query = Ticket::with(['gestor', 'admin']);
 
         if ($user->role !== 'admin') {
-            $query->where('creator_id', $user->id);
+            $query->where('gestor_id', $user->id);
         } else {
             $filters = $request->getQueryParams();
-            if (!empty($filters['status'])) {
-                $query->where('status', $filters['status']);
+            if (!empty($filters['estado'])) {
+                $query->where('estado', $filters['estado']);
             }
-            if (!empty($filters['creator_id'])) {
-                $query->where('creator_id', $filters['creator_id']);
+            if (!empty($filters['gestor_id'])) {
+                $query->where('gestor_id', $filters['gestor_id']);
             }
-            if (!empty($filters['assigned_admin_id'])) {
-                $query->where('assigned_admin_id', $filters['assigned_admin_id']);
+            if (!empty($filters['admin_id'])) {
+                $query->where('admin_id', $filters['admin_id']);
             }
         }
 
@@ -67,13 +69,13 @@ class TicketController
     public function detail(Request $request, Response $response, array $args): Response
     {
         $user = $request->getAttribute('user');
-        $ticket = Ticket::with(['creator', 'assignedAdmin', 'comments.user'])->find($args['id']);
+        $ticket = Ticket::with(['gestor', 'admin', 'actividades.user'])->find($args['id']);
 
         if (!$ticket) {
             return $this->json($response, ['success' => false, 'message' => 'Ticket no encontrado'], 404);
         }
 
-        if ($user->role !== 'admin' && $ticket->creator_id !== $user->id) {
+        if ($user->role !== 'admin' && $ticket->gestor_id !== $user->id) {
             return $this->json($response, ['success' => false, 'message' => 'No puedes ver este ticket'], 403);
         }
 
@@ -94,11 +96,11 @@ class TicketController
             return $this->json($response, ['success' => false, 'message' => 'Ticket no encontrado'], 404);
         }
 
-        if (empty($data['status']) || !in_array($data['status'], self::STATUS, true)) {
+        if (empty($data['estado']) || !in_array($data['estado'], self::ESTADOS, true)) {
             return $this->json($response, ['success' => false, 'message' => 'Estado inválido'], 400);
         }
 
-        $ticket->status = $data['status'];
+        $ticket->estado = $data['estado'];
         $ticket->save();
 
         return $this->json($response, ['success' => true, 'message' => 'Estado actualizado', 'ticket' => $ticket]);
@@ -118,17 +120,19 @@ class TicketController
             return $this->json($response, ['success' => false, 'message' => 'Ticket no encontrado'], 404);
         }
 
-        if (empty($data['assigned_admin_id'])) {
+        if (empty($data['admin_id'])) {
             return $this->json($response, ['success' => false, 'message' => 'Debe indicar el administrador'], 400);
         }
 
-        $admin = User::find($data['assigned_admin_id']);
+        $admin = User::find($data['admin_id']);
         if (!$admin || $admin->role !== 'admin') {
             return $this->json($response, ['success' => false, 'message' => 'El usuario asignado debe ser administrador'], 400);
         }
 
-        $ticket->assigned_admin_id = $admin->id;
+        $ticket->admin_id = $admin->id;
         $ticket->save();
+
+        $ticket->load(['gestor', 'admin']);
 
         return $this->json($response, ['success' => true, 'message' => 'Ticket asignado', 'ticket' => $ticket]);
     }
@@ -143,27 +147,29 @@ class TicketController
             return $this->json($response, ['success' => false, 'message' => 'Ticket no encontrado'], 404);
         }
 
-        $isOwner = $ticket->creator_id === $user->id;
+        $isOwner = $ticket->gestor_id === $user->id;
         $isAdmin = $user->role === 'admin';
 
         if (!$isAdmin && !$isOwner) {
             return $this->json($response, ['success' => false, 'message' => 'No puedes comentar este ticket'], 403);
         }
 
-        if (empty($data['comment'])) {
+        if (empty($data['mensaje'])) {
             return $this->json($response, ['success' => false, 'message' => 'El comentario es obligatorio'], 400);
         }
 
-        $comment = TicketComment::create([
+        $comentario = TicketActividad::create([
             'ticket_id' => $ticket->id,
             'user_id' => $user->id,
-            'comment' => $data['comment'],
+            'mensaje' => $data['mensaje'],
         ]);
+
+        $comentario->load('user');
 
         return $this->json($response, [
             'success' => true,
             'message' => 'Comentario agregado',
-            'comment' => $comment,
+            'comentario' => $comentario,
         ], 201);
     }
 
